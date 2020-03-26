@@ -1,0 +1,9 @@
+extends ../layouts/main.pug
+include ../mixins/videoBlock
+
+block content
+    .search-header
+        h3 Searching for #{searchingBy}
+    .search-video
+        each video in videos
+            +videoBlock(video)

@@ -1,0 +1,10 @@
+extends ../layouts/main.pug
+include ../mixins/videoBlock
+
+block content
+    .videos
+        if videos.length != 0
+            each video in videos
+                +videoBlock(video)
+        else 
+            |No Videos

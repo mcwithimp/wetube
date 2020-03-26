@@ -4,16 +4,16 @@ const routes = {
   videos: "/videos",
   search: "/search",
   upload: "/upload",
-  videoDetail: "/:id",
+  videoDetail: id => (id ? `/videos/${id}` : "/:id"),
   editVideo: "/:id/edit",
   deleteVideo: "/:id/delete",
 
   // Users
+  users: "/users",
   join: "/join",
   login: "/login",
   logout: "/logout",
-  users: "/users",
-  userDetail: "/:id",
+  userDetail: id => (id ? `/users/${id}` : "/:id"),
   editProfile: "/edit-profile",
   changePassword: "/change-password"
 };
