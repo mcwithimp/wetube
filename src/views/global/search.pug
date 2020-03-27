@@ -5,5 +5,8 @@ block content
     .search-header
         h3 Searching for #{searchingBy}
     .search-video
-        each video in videos
-            +videoBlock(video)
+        if videos.length != 0
+            each video in videos
+                +videoBlock(video)
+        else
+            h5 No Videos Found

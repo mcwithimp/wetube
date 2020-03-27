@@ -12,17 +12,31 @@
     "cookie-parser": "^1.4.5",
     "core-js": "3",
     "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
     "express": "^4.17.1",
     "helmet": "^3.21.3",
     "mongoose": "^5.9.6",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
-    "pug": "^2.0.4"
+    "pug": "^2.0.4",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js"
+    "dev:server": "nodemon --exec babel-node src/index.js --delay 1",
+    "dev:assets": "cd src && WEBPACK_ENV=development webpack --hot --inline",
+    "build:assets": "cd src && WEBPACK_ENV=production webpack"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "autoprefixer": "^9.7.5",
+    "css-loader": "^3.4.2",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.1",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.13.1",
+    "nodemon": "^2.0.2",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^8.0.2"
   }
 }

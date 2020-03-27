@@ -14,10 +14,10 @@ const app = express();
 
 app.use(helmet());
 app.set("views", [
-  __dirname + "/views",
-  __dirname + "/views/global",
-  __dirname + "/views/users",
-  __dirname + "/views/videos"
+  `${__dirname}/views`,
+  `${__dirname}/views/global`,
+  `${__dirname}/views/users`,
+  `${__dirname}/views/videos`
 ]);
 app.use("/uploads", express.static("uploads"));
 app.set("view engine", "pug");
