@@ -1,3 +1,4 @@
+// To Do: Code Splitting, Lazy loading, DevServer
 const path = require("path");
 const autoprefixer = require("autoprefixer");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -6,12 +7,17 @@ const MODE = process.env.WEBPACK_ENV;
 const isDevMode = MODE !== "production";
 const ENTRY_FILE = path.resolve(__dirname, "assets", "js", "main.js");
 const OUTPUT_DIR = path.join(__dirname, "static");
-console.log({ ENTRY_FILE, OUTPUT_DIR });
+
 const config = {
-  entry: ENTRY_FILE,
+  entry: ["@babel/polyfill", ENTRY_FILE],
   mode: MODE,
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: ["babel-loader"]
+      },
       {
         test: /\.scss$/,
         use: [
@@ -38,7 +44,7 @@ const config = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: isDevMode ? "[name].css" : "[name].[hash].css",
+      filename: isDevMode ? "style.css" : "style.[hash].css",
       chunkFilename: isDevMode ? "[id].css" : "[id].[hash].css"
     })
   ]
