@@ -53,4 +53,8 @@ package-lock.json
 
 # user files
 uploads
+<<<<<<< HEAD
 src/static
+=======
+src/static
+>>>>>>> 25dc674237d011d8775a7576c6a076ceb5f6314a
