@@ -1,19 +1,29 @@
 import express from "express";
 import routes from "../routes";
-import * as userController from "../controllers/userController";
-import * as videoController from "../controllers/videoController";
+import * as UC from "../controllers/userController";
+import * as VC from "../controllers/videoController";
+import { onlyPublic, onlyPrivate } from "../middlewares";
 
 const globalRouter = express.Router();
 
-globalRouter.get(routes.home, videoController.home);
-globalRouter.get(routes.search, videoController.search);
+globalRouter.get(routes.home, VC.home);
+globalRouter.get(routes.search, VC.search);
 
-globalRouter.get(routes.join, userController.getJoin);
-globalRouter.post(routes.join, userController.postJoin);
+globalRouter.get(routes.join, onlyPublic, UC.getJoin);
+globalRouter.post(routes.join, onlyPublic, UC.postJoin, UC.postLogin);
 
-globalRouter.get(routes.login, userController.getLogin);
-globalRouter.post(routes.login, userController.postLogin);
+globalRouter.get(routes.login, onlyPublic, UC.getLogin);
+globalRouter.post(routes.login, onlyPublic, UC.postLogin);
 
-globalRouter.get(routes.logout, userController.logout);
+globalRouter.get(routes.me, onlyPrivate, UC.getMe);
+
+// Social Login
+// doesnt need "onlyPublic"?s
+globalRouter.get(routes.github, UC.githubLogin);
+globalRouter.get(routes.githubCallback, UC.postGithubLogin);
+globalRouter.get(routes.kakao, UC.kakaoLogin);
+globalRouter.get(routes.kakoCallback, UC.postKakaoLogin);
+
+globalRouter.get(routes.logout, onlyPrivate, UC.logout);
 
 export default globalRouter;

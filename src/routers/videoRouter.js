@@ -1,22 +1,22 @@
 import express from "express";
 import routes from "../routes";
-import { uploadVideo } from "../middlewares";
-import * as videoController from "../controllers/videoController";
+import { uploadVideo, onlyPrivate } from "../middlewares";
+import * as VC from "../controllers/videoController";
 
 const videoRouter = express.Router();
 
 // videos/upload
-videoRouter.get(routes.upload, videoController.getUpload);
-videoRouter.post(routes.upload, uploadVideo, videoController.postUpload);
+videoRouter.get(routes.upload, onlyPrivate, VC.getUpload);
+videoRouter.post(routes.upload, onlyPrivate, uploadVideo, VC.postUpload);
 
 // videos/:id
-videoRouter.get(routes.videoDetail(), videoController.videoDetail);
+videoRouter.get(routes.videoDetail(), VC.videoDetail);
 
 // videos/:id/edit
-videoRouter.get(routes.editVideo(), videoController.getEditVideo);
-videoRouter.post(routes.editVideo(), videoController.postEditVideo);
+videoRouter.get(routes.editVideo(), onlyPrivate, VC.getEditVideo);
+videoRouter.post(routes.editVideo(), onlyPrivate, VC.postEditVideo);
 
 // videos/:id/delete
-videoRouter.get(routes.deleteVideo(), videoController.deleteVideo);
+videoRouter.get(routes.deleteVideo(), VC.deleteVideo);
 
 export default videoRouter;

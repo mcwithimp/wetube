@@ -13,9 +13,16 @@ const routes = {
   join: "/join",
   login: "/login",
   logout: "/logout",
+  me: "/me",
   userDetail: id => (id ? `/users/${id}` : "/:id"),
   editProfile: "/edit-profile",
-  changePassword: "/change-password"
+  changePassword: "/change-password",
+
+  // Social Login
+  github: "/auth/github",
+  githubCallback: "/auth/github/callback",
+  kakao: "/auth/kakao",
+  kakoCallback: "/auth/github/kakao"
 };
 
 export default routes;
