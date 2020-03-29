@@ -20,6 +20,7 @@ app.set("views", [
   `${__dirname}/views/videos`
 ]);
 app.use("/uploads", express.static("uploads"));
+app.use("/static", express.static(`${__dirname}/static`));
 app.set("view engine", "pug");
 
 // from express v4.16.0

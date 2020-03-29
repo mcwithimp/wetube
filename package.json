@@ -7,6 +7,7 @@
   "dependencies": {
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
+    "@babel/polyfill": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
@@ -25,7 +26,7 @@
   },
   "scripts": {
     "dev:server": "nodemon --exec babel-node src/index.js --delay 1",
-    "dev:assets": "cd src && WEBPACK_ENV=development webpack --hot --inline",
+    "dev:assets": "cd src && WEBPACK_ENV=development webpack --hot --inline --watch",
     "build:assets": "cd src && WEBPACK_ENV=production webpack"
   },
   "devDependencies": {
