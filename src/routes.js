@@ -21,8 +21,10 @@ const routes = {
   // Social Login
   github: "/auth/github",
   githubCallback: "/auth/github/callback",
-  kakao: "/auth/kakao",
-  kakoCallback: "/auth/github/kakao"
+  facebook: "/auth/facebook",
+  facebookCallback: "/auth/facebook/callback",
+  google: "/auth/google",
+  googleCallback: "/auth/google/callback"
 };
 
 export default routes;

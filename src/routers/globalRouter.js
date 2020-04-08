@@ -21,8 +21,10 @@ globalRouter.get(routes.me, onlyPrivate, UC.getMe);
 // doesnt need "onlyPublic"?s
 globalRouter.get(routes.github, UC.githubLogin);
 globalRouter.get(routes.githubCallback, UC.postGithubLogin);
-globalRouter.get(routes.kakao, UC.kakaoLogin);
-globalRouter.get(routes.kakoCallback, UC.postKakaoLogin);
+globalRouter.get(routes.facebook, UC.facebookLogin);
+globalRouter.get(routes.facebookCallback, UC.postFacebookLogin);
+globalRouter.get(routes.google, UC.googleLogin);
+globalRouter.get(routes.googleCallback, UC.postGoogleLogin);
 
 globalRouter.get(routes.logout, onlyPrivate, UC.logout);
 

@@ -1,10 +1,12 @@
 import passport from "passport";
 import GithubStrategy from "passport-github";
-import KakaoStrategy from "passport-kakao";
+import FacebookStrategy from "passport-facebook";
+import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth";
 import User from "./models/User";
 import {
   githubLoginCallback,
-  kakaoLoginCallback
+  facebookLoginCallback,
+  googleLoginCallback
 } from "./controllers/userController";
 import routes from "./routes";
 
@@ -21,14 +23,29 @@ passport.use(
   )
 );
 
-// KAKAO use REST API KEY as CLIENT_ID
+// Facebook use REST API KEY as CLIENT_ID
 passport.use(
-  new KakaoStrategy(
+  new FacebookStrategy(
     {
-      clientID: process.env.KAKAO_CLIENT_ID,
-      callbackURL: `http://localhost:4001${routes.kakoCallback}`
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: `http://localhost:4001${routes.facebookCallback}`,
+      profileFields: ["id", "email", "displayName", "photos"],
+      scope: ["public_profile", "email"]
     },
-    kakaoLoginCallback
+    facebookLoginCallback
+  )
+);
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: `http://localhost:4001${routes.googleCallback}`,
+      scope: ["profile", "email"]
+    },
+    googleLoginCallback
   )
 );
 

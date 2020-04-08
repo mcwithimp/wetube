@@ -36,7 +36,12 @@ export const githubLogin = passport.authenticate("github", {
   failureFlash: "Can't log in at this time"
 });
 
-export const kakaoLogin = passport.authenticate("kakao", {
+export const facebookLogin = passport.authenticate("facebook", {
+  successFlash: "Welcome",
+  failureFlash: "Can't log in at this time"
+});
+
+export const googleLogin = passport.authenticate("google", {
   successFlash: "Welcome",
   failureFlash: "Can't log in at this time"
 });
@@ -47,7 +52,7 @@ export const githubLoginCallback = async (_, __, profile, done) => {
   } = profile;
 
   try {
-    // user has not set name and email in github
+    // WHAT IF github user has no email address which is set as public
     // on the other hand, passportMongoose manages a user by email
     // UserSchema.plugin(passportLocalMongoose, { usernameField: "email" });
     const user = await User.findOne({ email });
@@ -65,12 +70,62 @@ export const githubLoginCallback = async (_, __, profile, done) => {
 
     return done(null, newUser);
   } catch (error) {
-    return done(error);
+    return done(error, false);
   }
 };
 
-export const kakaoLoginCallback = (_, __, profile, done) => {
-  console.log(profile, done);
+export const facebookLoginCallback = async (_, __, profile, done) => {
+  const {
+    _json: { id, name, email }
+  } = profile;
+
+  const avatarUrl = `https://graph.facebook.com/${id}/picture?type=large`;
+  try {
+    // WHAT IF facebook user has no email address which is set as public
+    const user = await User.findOne({ email });
+    if (user) {
+      user.facebookId = id;
+      user.avatarUrl = avatarUrl;
+      user.save();
+      return done(null, user);
+    }
+    const newUser = await User.create({
+      email,
+      name,
+      facebookId: id,
+      avatarUrl
+    });
+
+    return done(null, newUser);
+  } catch (error) {
+    return done(error, false);
+  }
+};
+
+export const googleLoginCallback = async (_, __, profile, done) => {
+  const {
+    _json: { sub: id, name, email, picture: avatarUrl }
+  } = profile;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      user.googleId = id;
+      // user.avatarUrl = avatarUrl;
+      user.save();
+      return done(null, user);
+    }
+
+    const newUser = await User.create({
+      email,
+      name,
+      googleId: id,
+      avatarUrl
+    });
+
+    return done(null, newUser);
+  } catch (error) {
+    return done(error, false);
+  }
 };
 
 export const postGithubLogin = passport.authenticate("github", {
@@ -78,14 +133,22 @@ export const postGithubLogin = passport.authenticate("github", {
   successRedirect: routes.home
 });
 
-export const postKakaoLogin = passport.authenticate("kako", {
+export const postFacebookLogin = passport.authenticate("facebook", {
+  failureRedirect: routes.login,
+  successRedirect: routes.home
+});
+
+export const postGoogleLogin = passport.authenticate("google", {
   failureRedirect: routes.login,
   successRedirect: routes.home
 });
 
 export const logout = (req, res) => {
   req.logout();
-  res.redirect(routes.home);
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.redirect(routes.home);
+  });
 };
 
 export const editProfile = (req, res) =>
@@ -94,8 +157,17 @@ export const editProfile = (req, res) =>
 export const getMe = (req, res) =>
   res.render("userDetail", { title: "User Detail", user: req.user });
 
-export const userDetail = (req, res) =>
-  res.render("userDetail", { title: "User Detail" });
+export const userDetail = async (req, res) => {
+  const {
+    params: { id }
+  } = req;
+  try {
+    const user = await User.findById(id);
+    res.render("userDetail", { title: "User Detail", user });
+  } catch (error) {
+    res.redirect(routes.home);
+  }
+};
 
 export const changePassword = (req, res) =>
   res.render("changePassword", { title: "Change Password" });
