@@ -20,7 +20,7 @@ export const search = async (req, res) => {
     //  1) 리밋만큼 나오면 패스
     //  To Do: 2) 리밋보다 적으면, 내용에서만 검색
     videos = await Video.find({
-      title: { $regex: pattern }
+      title: { $regex: pattern },
     });
 
     // const videos = await Video.find({
@@ -39,15 +39,18 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
   const {
     body: { title, description },
-    file: { path: fileUrl }
+    file: { path: fileUrl },
   } = req;
 
   // To Do: Upload and save video
   const newVideo = await Video.create({
     fileUrl,
     title,
-    description
+    description,
+    creator: req.user.id,
   });
+  req.user.videos.push(newVideo.id);
+  req.user.save();
   console.log({ newVideo });
   res.redirect(routes.videoDetail(newVideo.id));
 };
@@ -55,7 +58,7 @@ export const postUpload = async (req, res) => {
 export const videoDetail = async (req, res) => {
   const { id } = req.params;
   try {
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("creator");
     res.render("videoDetail", { title: video.title, video });
   } catch (error) {
     console.log(error);
@@ -67,6 +70,9 @@ export const getEditVideo = async (req, res) => {
   const { id } = req.params;
   try {
     const video = await Video.findById(id);
+    if (video.creator.id !== req.user.id) {
+      throw Error();
+    }
     res.render("editVideo", { title: `Edit ${video.title}`, video });
   } catch (error) {
     console.log(error);
@@ -77,7 +83,7 @@ export const getEditVideo = async (req, res) => {
 export const postEditVideo = async (req, res) => {
   const {
     params: { id },
-    body: { title, description }
+    body: { title, description },
   } = req;
   try {
     await Video.findByIdAndUpdate(id, { title, description });
@@ -93,7 +99,12 @@ export const deleteVideo = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await Video.findByIdAndDelete(id);
+    const video = await Video.findById(id);
+    if (video.creator.id !== req.user.id) {
+      throw Error();
+    } else {
+      await Video.findByIdAndDelete(id);
+    }
   } catch (error) {
     console.log(error);
   }

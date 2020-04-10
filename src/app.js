@@ -8,6 +8,7 @@ import passport from "passport";
 import session from "express-session";
 import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
+import flash from "connect-flash";
 import { localsMiddleware } from "./middlewares";
 import globalRouter from "./routers/globalRouter";
 import videoRouter from "./routers/videoRouter";
@@ -22,7 +23,7 @@ app.set("views", [
   `${__dirname}/views`,
   `${__dirname}/views/global`,
   `${__dirname}/views/users`,
-  `${__dirname}/views/videos`
+  `${__dirname}/views/videos`,
 ]);
 app.use("/uploads", express.static("uploads"));
 app.use("/static", express.static(`${__dirname}/static`));
@@ -45,9 +46,10 @@ app.use(
     secret: process.env.SESSION_SECRET,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
     saveUninitialized: true,
-    resave: true
+    resave: true,
   })
 );
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(localsMiddleware);
